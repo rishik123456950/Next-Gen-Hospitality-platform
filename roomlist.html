@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<style>
+    ul{
+        list-style: none;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .room-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .room-card {
+        background: white;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 250px;
+        text-align: center;
+    }
+
+    .room-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .room-card h3 {
+        margin: 10px 0;
+        color: #007bff;
+    }
+
+    .room-card p {
+        color: #555;
+    }
+
+    .book-now {
+        display: inline-block;
+        padding: 10px 15px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .book-now:hover {
+        background-color: #0056b3;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+        text-align: center;
+    }
+
+    .close-btn {
+        background: red;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .check-availability {
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+    
+    }
+</style>
+
+<div class="roomlist-container">
+    <h2 style="margin-top: 50px; color: aliceblue; text-align: center;">Rooms in {{ hotel.name }}</h2>
+    <div class="room-list">
+        {% for room in rooms %}
+        <div class="room-card">
+            {% if room.room_plan %}
+            <img src="{{ room.room_plan.url }}" alt="Room Plan">
+            {% else %}
+            <p>No Image Available</p>
+            {% endif %}
+            <h3>Room {{ room.room_number }}</h3>
+            <p>Type: {{ room.room_type }}</p>
+            <p>Price: ${{ room.price_per_night }}/night</p>
+            <p>Status: <button class="check-availability" onclick="openModal({{ room.id }})">Check Availability</button></p>
+            <a href="{% url 'book_room' room.id %}" class="book-now">Book Room</a>
+        </div>
+        {% empty %}
+        <p>No rooms available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="availability-modal" class="modal">
+    <div class="modal-content">
+        <h3>Booked Dates</h3>
+        <ul id="booked-dates-list"></ul>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    function openModal(roomId) {
+        fetch(`/room/${roomId}/booked-dates/`)
+            .then(response => response.json())
+            .then(data => {
+                const bookedDatesList = document.getElementById("booked-dates-list");
+                bookedDatesList.innerHTML = "";
+                if (data.length === 0) {
+                    bookedDatesList.innerHTML = "<li>No bookings yet.</li>";
+                } else {
+                    data.forEach(booking => {
+                        bookedDatesList.innerHTML += `<li>${booking.check_in} to ${booking.check_out}</li>`;
+                    });
+                }
+                document.getElementById("availability-modal").style.display = "flex";
+            });
+    }
+
+    function closeModal() {
+        document.getElementById("availability-modal").style.display = "none";
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block main %}
+<style>
+    
+
+    /* Background Styling */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Glassmorphism Effect */
+    .form-container {
+        margin-top: 10%;
+        background:  rgba(65, 124, 235, 0.411); /* Semi-transparent white */
+        backdrop-filter: blur(30px); /* Blur effect */
+        padding: 30px;
+        border-radius: 12px;
+        width: 700px;
+        text-align: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        font-weight: bold;
+    }
+
+    h2 {
+        color: rgb(255, 255, 255);
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .input-group div {
+        flex: 1;
+        margin: 0 10px;
+    }
+
+    .form-container label {
+        display: block;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.997);
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    .form-container input {
+        width: 100%;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        color: rgb(255, 255, 255);
+    }
+    .form-container textarea {
+        width: 97%;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        color: rgb(255, 255, 255);
+    }
+
+    .form-container input::placeholder {
+        color: rgba(241, 211, 87, 0.7);
+    }
+
+    .form-container textarea::placeholder {
+        color: rgba(241, 211, 87, 0.7);
+    }
+
+    .form-container button {
+        width: 98%;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
+        color: rgb(0, 0, 0);
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+
+    .form-container button:hover {
+        background: 	RGB(255, 193, 7);
+    }
+
+    .register-link {
+        margin-top: 10px;
+        display: block;
+        font-size: 14px;
+        color: rgb(230, 34, 34);
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .register-link:hover {
+        color: rgb(92, 7, 7);
+    }
+</style>
+
+<div class="form-container">
+    <h2>Customer Registration</h2>
+
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form action="/register" method="POST">
+        {% csrf_token %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: #ee0e0e;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <div class="input-group">
+            <div>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter full name" required>
+            </div>
+            <div>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Choose a username" required>
+            </div>
+        </div>
+    
+        <div class="input-group">
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email" required>
+            </div>
+            <div>
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+            </div>
+        </div>
+    
+        <div class="input-group">
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                    placeholder="Abcd123@" required>
+            </div>
+            <div>
+                <label for="cnfm_password">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="cnfm_password" placeholder="Confirm password" required>
+            </div>
+        </div>
+        <div>
+            <label for="address">Address</label>
+            <textarea type="text" id="address" name="address" rows="2" cols="87" placeholder="Enter your message here..." required></textarea>    
+        </div>
+        
+        <button type="submit">Sign Up</button> 
+        <a href="{% url 'login' %}" class="register-link">Already signed up? Login</a>
+    </form>
+</div>
+{% endblock %}

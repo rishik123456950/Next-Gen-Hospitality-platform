@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% block main %}
+<style>
+    .home{
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 100%;
+     height: 80vh;
+    } 
+    img{
+     display: flex;
+     width: 1000px;
+     height: 450px;
+    }
+ </style>
+<div class="home">
+    <h1 class="head">Welcome to NXT GENERATION Hospitality</h1>
+</div>
+<div >
+    {% if messages %}
+    {% for message in messages %}
+        <p style="color: #c81805; margin-left: 48%; font-weight: bold; ">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+</div>
+{% endblock %}

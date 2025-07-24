@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<style>
+    .div-containerss {
+        width: 90%;
+        margin: 50px auto;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.8); /* Glassmorphism effect */
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    th, td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-size: 16px;
+    }
+
+    th {
+        background: #007bff;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    td {
+        background: rgba(255, 255, 255, 0.4);
+        font-weight: bold;
+        color: #333;
+    }
+
+    tr:hover {
+        background: rgba(0, 123, 255, 0.1);
+        transition: 0.3s;
+    }
+
+    /* Status Styling */
+    .confirmed {
+        color: green;
+        font-weight: bold;
+    }
+
+    .cancelled {
+        color: red;
+        font-weight: bold;
+    }
+
+    /* Buttons */
+    .cancel-btn {
+        padding: 8px 12px;
+        background: #dc3545;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.3s;
+        display: inline-block;
+    }
+
+    .cancel-btn:hover {
+        background: #b02a37;
+        transform: scale(1.05);
+    }
+
+    .disabled-btn {
+        padding: 8px 12px;
+        background: gray;
+        color: white;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: not-allowed;
+        display: inline-block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .div-containerss {
+            width: 95%;
+        }
+
+        th, td {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .cancel-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+    }
+</style>
+
+<div class="div-containerss">
+    <h2 style="color: aliceblue;">Your Booking History</h2>
+    
+    {% if messages %}
+    <div class="table-container">
+        {% for message in messages %}
+        <p style="color: red; font-weight: bold;">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if bookings %}
+    <table>
+        <tr>
+            <th>Booking ID</th>
+            <th>Hotel</th>
+            <th>Room</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.hotel.name }}</td>
+            <td>{{ booking.room.room_number }}</td>
+            <td>{{ booking.check_in }}</td>
+            <td>{{ booking.check_out }}</td>
+            <td>${{ booking.total_price }}</td>
+            <td class="{% if booking.status == 'Confirmed' %}confirmed{% else %}cancelled{% endif %}">
+                {{ booking.status }}
+            </td>
+            <td>
+                {% if booking.status == "Pending" %}
+                    {% if user.is_staff %}
+                    <a href="{% url 'confirm_booking' booking.id %}" class="cancel-btn">Confirm</a>
+                    {% endif %}
+                    <a href="{% url 'cancel_booking' booking.id %}" class="cancel-btn">Cancel</a>
+                {% else %}
+                <span class="disabled-btn">No Actions</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p style="font-size: 18px; color: #555;">No bookings found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

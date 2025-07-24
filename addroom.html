@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block main %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Room</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Full-page background */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Glassmorphism Container */
+        .room-container {
+            background: rgba(65, 124, 235, 0.411); /* Semi-transparent background */
+            backdrop-filter: blur(20px); /* Blur effect */
+            padding: 40px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .room-container h2 {
+            margin-bottom: 20px;
+            color: rgb(255, 255, 255);
+            font-family: serif;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: rgb(252, 252, 252);
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            color: rgb(255, 255, 255);
+        }
+
+        .input-group input::placeholder {
+            color: black;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #FFC107;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: rgba(232, 191, 164, 0.895);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="room-container">
+        <h2>Add Room</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label for="room_number">Room Number:</label>
+                <input type="text" name="room_number" required>
+            </div>
+
+            <div class="input-group">
+                <label for="room_plan">Upload Room Plan:</label>
+                <input type="file" name="room_plan" accept="image/*">
+            </div>
+
+            <div class="input-group">
+                <label for="room_type">Room Type:</label>
+                <select name="room_type" required>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Suite">Suite</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="price_per_night">Price per Night:</label>
+                <input type="number" name="price_per_night" step="0.01" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Room</button>
+        </form>
+    </div>
+</body>
+
+</html>
+{% endblock %}
+    
